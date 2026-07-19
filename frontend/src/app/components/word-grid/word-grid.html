@@ -1,0 +1,15 @@
+<div class="grid-container" [style.grid-template-columns]="'repeat(' + level().width + ', 1fr)'" [style.grid-template-rows]="'repeat(' + level().height + ', 1fr)'" [style.aspect-ratio]="level().width + '/' + level().height">
+  @for (cell of gridCells(); track $index) {
+    @if (cell.isUsed) {
+      <div 
+        class="grid-cell" 
+        [class.solved]="isCellSolved(cell)"
+        [class.hint-revealed]="!cell.words.some(w => solvedWords().includes(w)) && isCellSolved(cell)"
+        (click)="onCellClick(cell)">
+        <span class="letter">{{ isCellSolved(cell) ? cell.char : '' }}</span>
+      </div>
+    } @else {
+      <div class="grid-cell empty"></div>
+    }
+  }
+</div>

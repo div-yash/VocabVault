@@ -1,0 +1,92 @@
+<div class="game-container" [class.success-flash]="successFlash()">
+  <header class="game-header">
+    <div class="brand">
+      <h1 class="logo">VOCAB <span>VAULT</span></h1>
+    </div>
+    <div class="stats">
+      <div class="stat-box">
+        <span class="label">LEVEL</span>
+        <span class="val">{{ player().currentLevel }}</span>
+      </div>
+      <div class="stat-box">
+        <span class="label">SCORE</span>
+        <span class="val">{{ player().score }}</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="board-layout">
+    @if (level()) {
+      <div class="layout-left">
+        <div class="grid-section">
+          <app-word-grid 
+            [level]="level()!" 
+            [solvedWords]="solvedWords()" 
+            [revealedCoords]="revealedCoords()"
+            (cellClick)="onCellClick($event)"
+          />
+        </div>
+      </div>
+
+      <div class="layout-right">
+        <div class="preview-section">
+          <div class="word-preview-box" [class.shake]="shakePreview()" [class.visible]="currentPreview().length > 0">
+            @for (char of currentPreview().split(''); track $index) {
+              <span class="char-bubble">{{ char }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="circle-section">
+          <div class="action-buttons left">
+            <button class="game-btn secondary" (click)="restartLevel()" title="Restart Level">
+              <span class="icon">🔄</span>
+            </button>
+          </div>
+
+          <app-letter-circle 
+            [letters]="level()!.letters"
+            (wordPreview)="onWordPreview($event)"
+            (wordFormed)="onWordFormed($event)"
+          />
+
+          <div class="action-buttons right">
+            <button class="game-btn primary hint" (click)="useHint()" title="Reveal letter (Costs 50 points)">
+              <span class="icon">💡</span>
+              <span class="cost">50</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="loader-container">
+        <div class="spinner"></div>
+        <p>Generating crossword grid...</p>
+      </div>
+    }
+  </main>
+
+  @if (levelComplete()) {
+    <div class="dialog-backdrop">
+      <div class="dialog-content">
+        <div class="success-banner">✨ LEVEL COMPLETE ✨</div>
+        <p class="congrats-text">Amazing! You solved all words in level {{ player().currentLevel - 1 }}!</p>
+        <button class="next-btn" (click)="nextLevel()">NEXT LEVEL ➔</button>
+      </div>
+    </div>
+  }
+
+  @if (showMeaning()) {
+    <app-meaning-popup 
+      [word]="activeWord()" 
+      [meaning]="activeMeaning()" 
+      (close)="showMeaning.set(false)"
+    />
+  }
+
+  @if (message().length > 0) {
+    <div class="toast" [class]="messageType()">
+      {{ message() }}
+    </div>
+  }
+</div>

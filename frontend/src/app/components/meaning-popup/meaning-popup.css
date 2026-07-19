@@ -1,0 +1,121 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.modal-content {
+  background: rgba(30, 30, 46, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 420px;
+  padding: 28px;
+  color: #f1f1f6;
+  animation: slideUp 0.35s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 0.8;
+  padding: 0;
+  margin: 0;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.close-btn:hover {
+  color: #ff4757;
+  transform: rotate(90deg);
+}
+
+.modal-body {
+  margin-bottom: 28px;
+}
+
+.definition {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #d1d1e0;
+  font-style: italic;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 14px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(0, 242, 254, 0.35);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

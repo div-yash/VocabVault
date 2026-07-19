@@ -1,0 +1,59 @@
+<div class="circle-wrapper">
+  <svg 
+    #svgContainer
+    viewBox="0 0 300 300" 
+    class="letter-svg"
+  >
+    <circle cx="150" cy="150" r="130" class="ring-bg" />
+
+    @if (selectedIndices.length > 0) {
+      <path 
+        [attr.d]="svgPath" 
+        class="connection-path" 
+      />
+      @if (isDrawing && lastSelectedPos) {
+        <line 
+          [attr.x1]="lastSelectedPos.x" 
+          [attr.y1]="lastSelectedPos.y" 
+          [attr.x2]="pointerX" 
+          [attr.y2]="pointerY" 
+          class="pointer-line" 
+        />
+      }
+    }
+
+    @for (pos of letterPositions(); track pos.index) {
+      <g 
+        class="letter-node"
+        [class.selected]="isLetterSelected(pos.index)"
+        (mousedown)="onStart(pos.index, $event)"
+        (touchstart)="onStart(pos.index, $event)"
+      >
+        <circle 
+          [attr.cx]="pos.x" 
+          [attr.cy]="pos.y" 
+          r="25" 
+          class="node-circle" 
+        />
+        @if (isLetterSelected(pos.index)) {
+          <circle 
+            [attr.cx]="pos.x + 16" 
+            [attr.cy]="pos.y - 16" 
+            r="8" 
+            class="badge-circle" 
+          />
+          <text 
+            [attr.x]="pos.x + 16" 
+            [attr.y]="pos.y - 13" 
+            class="badge-text"
+          >{{ getSelectionOrder(pos.index) }}</text>
+        }
+        <text 
+          [attr.x]="pos.x" 
+          [attr.y]="pos.y + 7" 
+          class="node-text"
+        >{{ pos.char }}</text>
+      </g>
+    }
+  </svg>
+</div>

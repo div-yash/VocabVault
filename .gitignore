@@ -1,0 +1,16 @@
+# Frontend ignores
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.vscode/
+
+# Backend ignores
+backend/**/bin/
+backend/**/obj/
+backend/.vs/
+backend/appsettings.Development.json
+
+# General ignores
+.DS_Store
+*.user
+*.suo
