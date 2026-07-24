@@ -15,6 +15,7 @@ import { MeaningPopup } from '../meaning-popup/meaning-popup';
 })
 export class GameBoard implements OnInit {
   player = signal<Player>({ username: 'Player 1', currentLevel: 1, score: 0 });
+  displayedScore = signal<number>(0);
   level = signal<Level | null>(null);
   
   solvedWords = signal<string[]>([]);
@@ -42,6 +43,7 @@ export class GameBoard implements OnInit {
     this.gameService.getPlayerProgress('Player 1').subscribe({
       next: (prog) => {
         this.player.set(prog);
+        this.displayedScore.set(prog.score);
         this.loadLevel(prog.currentLevel);
       },
       error: (err) => {
@@ -89,12 +91,15 @@ export class GameBoard implements OnInit {
         
         const points = guess.length * 10;
         const currentProg = this.player();
+        const newScore = currentProg.score + points;
         const updatedPlayer = {
           ...currentProg,
-          score: currentProg.score + points
+          score: newScore
         };
         this.player.set(updatedPlayer);
         this.gameService.updatePlayerProgress(updatedPlayer).subscribe();
+        this.animateScore(newScore);
+        this.triggerConfetti();
 
         this.successFlash.set(true);
         setTimeout(() => this.successFlash.set(false), 500);
@@ -188,12 +193,14 @@ export class GameBoard implements OnInit {
       this.showToast('Requires 50 points for a hint!', 'error');
       return;
     } else {
+      const newScore = currentProg.score - 50;
       const updatedPlayer = {
         ...currentProg,
-        score: currentProg.score - 50
+        score: newScore
       };
       this.player.set(updatedPlayer);
       this.gameService.updatePlayerProgress(updatedPlayer).subscribe();
+      this.animateScore(newScore);
     }
 
     const randCell = unsolvedCells[Math.floor(Math.random() * unsolvedCells.length)];
@@ -226,6 +233,10 @@ export class GameBoard implements OnInit {
     
     this.player.set(updatedPlayer);
     this.gameService.updatePlayerProgress(updatedPlayer).subscribe();
+    
+    // Double confetti explosion for level complete!
+    this.triggerConfetti();
+    setTimeout(() => this.triggerConfetti(), 350);
   }
 
   nextLevel() {
@@ -250,5 +261,86 @@ export class GameBoard implements OnInit {
         this.messageType.set('');
       }
     }, 3000);
+  }
+
+  animateScore(targetScore: number) {
+    const start = this.displayedScore();
+    const duration = 600; // ms
+    const startTime = performance.now();
+    
+    const updateScore = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = progress * (2 - progress); // easeOutQuad
+      const current = Math.floor(start + (targetScore - start) * easedProgress);
+      this.displayedScore.set(current);
+      
+      if (progress < 1) {
+        requestAnimationFrame(updateScore);
+      } else {
+        this.displayedScore.set(targetScore);
+      }
+    };
+    
+    requestAnimationFrame(updateScore);
+  }
+
+  triggerConfetti() {
+    const colors = ['#00f2fe', '#4facfe', '#ff9f43', '#ff5252', '#2ed573', '#1e90ff', '#fffa65'];
+    const container = document.body;
+    const particleCount = 40;
+    
+    // Position explosion in the center of the viewport
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight * 0.45;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'confetti-particle';
+      
+      const size = Math.random() * 8 + 6;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = Math.random() * 8 + 4;
+      const velocityX = Math.cos(angle) * velocity;
+      const velocityY = Math.sin(angle) * velocity;
+      
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.backgroundColor = color;
+      particle.style.left = `${centerX}px`;
+      particle.style.top = `${centerY}px`;
+      particle.style.position = 'fixed';
+      particle.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%';
+      particle.style.pointerEvents = 'none';
+      particle.style.zIndex = '9999';
+      particle.style.transform = `rotate(${Math.random() * 360}deg)`;
+      
+      container.appendChild(particle);
+      
+      let posX = centerX;
+      let posY = centerY;
+      let currentVelocityY = velocityY;
+      let opacity = 1;
+      
+      const updateAnimation = () => {
+        posX += velocityX;
+        posY += currentVelocityY;
+        currentVelocityY += 0.22; // gravity
+        opacity -= 0.018; // fade out
+        
+        particle.style.left = `${posX}px`;
+        particle.style.top = `${posY}px`;
+        particle.style.opacity = `${opacity}`;
+        
+        if (opacity > 0) {
+          requestAnimationFrame(updateAnimation);
+        } else {
+          particle.remove();
+        }
+      };
+      
+      requestAnimationFrame(updateAnimation);
+    }
   }
 }

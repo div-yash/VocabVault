@@ -1,3 +1,6 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
 /* Reset margins and set background for premium game styling */
 html, body {
   margin: 0;

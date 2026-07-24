@@ -280,8 +280,13 @@ public class CrosswordGenerator : ICrosswordGenerator
             }
         }
 
-        // Formula: Score = (intersections * 20) - (area expansion)
+        // Formula: Score = (intersections * 20) - (area expansion) - (aspect ratio imbalance penalty)
         int areaExpansion = newArea - currentArea;
-        return (intersections * 20) - areaExpansion;
+        int newWidth = newMaxX - newMinX + 1;
+        int newHeight = newMaxY - newMinY + 1;
+        int aspectImbalance = Math.Abs(newWidth - newHeight);
+        int ratioPenalty = aspectImbalance * 6; // Penalize non-square layouts
+        
+        return (intersections * 20) - areaExpansion - ratioPenalty;
     }
 }

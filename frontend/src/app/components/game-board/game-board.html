@@ -1,16 +1,16 @@
 <div class="game-container" [class.success-flash]="successFlash()">
-  <header class="game-header">
+  <header class="game-header d-flex justify-content-between align-items-center py-3 px-4 shadow-sm">
     <div class="brand">
       <h1 class="logo">VOCAB <span>VAULT</span></h1>
     </div>
-    <div class="stats">
+    <div class="stats d-flex gap-3">
       <div class="stat-box">
         <span class="label">LEVEL</span>
         <span class="val">{{ player().currentLevel }}</span>
       </div>
       <div class="stat-box">
         <span class="label">SCORE</span>
-        <span class="val">{{ player().score }}</span>
+        <span class="val">{{ displayedScore() }}</span>
       </div>
     </div>
   </header>
@@ -39,8 +39,8 @@
 
         <div class="circle-section">
           <div class="action-buttons left">
-            <button class="game-btn secondary" (click)="restartLevel()" title="Restart Level">
-              <span class="icon">🔄</span>
+            <button class="game-btn secondary btn btn-outline-light rounded-circle d-flex flex-column align-items-center justify-content-center" (click)="restartLevel()" title="Restart Level">
+              <span class="icon"><i class="bi bi-arrow-counterclockwise"></i></span>
             </button>
           </div>
 
@@ -51,27 +51,33 @@
           />
 
           <div class="action-buttons right">
-            <button class="game-btn primary hint" (click)="useHint()" title="Reveal letter (Costs 50 points)">
-              <span class="icon">💡</span>
-              <span class="cost">50</span>
+            <button class="game-btn primary hint btn btn-warning text-white rounded-circle d-flex flex-column align-items-center justify-content-center" (click)="useHint()" title="Reveal letter (Costs 50 points)">
+              <span class="icon"><i class="bi bi-lightbulb-fill"></i></span>
+              <span class="cost badge bg-dark text-warning p-1">50</span>
             </button>
           </div>
         </div>
       </div>
     } @else {
-      <div class="loader-container">
-        <div class="spinner"></div>
-        <p>Generating crossword grid...</p>
+      <div class="loader-container d-flex flex-column align-items-center justify-content-center h-100 w-100 my-5">
+        <div class="spinner-border text-info mb-3" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="text-light opacity-75 fw-semibold">Compiling Crossword Board...</p>
       </div>
     }
   </main>
 
   @if (levelComplete()) {
-    <div class="dialog-backdrop">
-      <div class="dialog-content">
-        <div class="success-banner">✨ LEVEL COMPLETE ✨</div>
-        <p class="congrats-text">Amazing! You solved all words in level {{ player().currentLevel - 1 }}!</p>
-        <button class="next-btn" (click)="nextLevel()">NEXT LEVEL ➔</button>
+    <div class="dialog-backdrop d-flex justify-content-center align-items-center">
+      <div class="dialog-content card border-0 text-center p-4 rounded-4 shadow-lg text-white" style="max-width: 380px; width: 90%; background: rgba(30, 30, 48, 0.95); border: 1px solid rgba(0, 242, 254, 0.25) !important;">
+        <div class="card-body py-4">
+          <div class="success-banner fw-bold text-info mb-3" style="font-family: 'Outfit', sans-serif; letter-spacing: 2px; font-size: 1.80rem;">✨ LEVEL COMPLETE ✨</div>
+          <p class="congrats-text text-light opacity-75 mb-4">Amazing! You solved all words in level {{ player().currentLevel - 1 }}!</p>
+          <button class="next-btn btn btn-info btn-lg text-white w-100 py-3 rounded-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" (click)="nextLevel()">
+            NEXT LEVEL <i class="bi bi-arrow-right-short fs-4"></i>
+          </button>
+        </div>
       </div>
     </div>
   }
@@ -85,7 +91,7 @@
   }
 
   @if (message().length > 0) {
-    <div class="toast" [class]="messageType()">
+    <div class="toast show text-white border-0 shadow" [class]="messageType()" style="position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1050; border-radius: 20px; padding: 12px 28px; background: rgba(22, 22, 34, 0.95);">
       {{ message() }}
     </div>
   }
