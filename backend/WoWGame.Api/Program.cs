@@ -7,9 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Configure EF Core with MS SQL Server
+// Configure EF Core with PostgreSQL
 builder.Services.AddDbContext<WoWGameDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure HTTP client for WordMeaningService
 builder.Services.AddHttpClient<IWordMeaningService, WordMeaningService>();
@@ -56,7 +56,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<WoWGameDbContext>();
-        context.Database.Migrate();
+        context.Database.EnsureCreated();
     }
     catch (Exception ex)
     {
