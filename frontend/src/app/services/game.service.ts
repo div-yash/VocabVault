@@ -7,9 +7,14 @@ import { Level, Player, WordMeaning } from '../models/game.models';
   providedIn: 'root'
 })
 export class GameService {
-  private readonly apiUrl = 'http://localhost:5194/api';
+  private readonly apiUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+    this.apiUrl = isLocal 
+      ? 'http://localhost:5194/api' 
+      : 'https://vocabvault-api.onrender.com/api';
+  }
 
   getLevel(levelNumber: number): Observable<Level> {
     return this.http.get<Level>(`${this.apiUrl}/level/${levelNumber}`);
