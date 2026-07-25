@@ -1,5 +1,8 @@
 # VocabVault 🗝️
 
+### 🎮 **Live Demo:** [https://vocab-vault.vercel.app](https://vocab-vault.vercel.app)
+### ⚙️ **Live API:** [https://vocabvault-api.onrender.com](https://vocabvault-api.onrender.com)
+
 VocabVault is a dynamic, premium, full-stack crossword connect word puzzle game inspired by **"Words of Wonders" (WoW)**. Players connect letters arranged in a circle using click-and-drag or touch paths to form words and fill them into an intersecting crossword grid.
 
 This project is built using a modern **Angular 21** frontend, an **ASP.NET Core Web API (.NET 10)** backend, and a serverless **PostgreSQL** database. It is optimized to be deployed completely for free in the cloud.
